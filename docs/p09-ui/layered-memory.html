@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>本地智能体工作台 · 分层记忆可感知（p0.9）</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <nav class="rail" aria-label="主导航">
+      <div class="rail-avatar" title="我">我</div>
+      <a class="rail-item is-active" href="index.html" title="会话"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3.75A2.75 2.75 0 0 0 1.25 6.5v8A2.75 2.75 0 0 0 4 17.25h1.75V20.5a.75.75 0 0 0 1.22.58L11.3 17.25H20A2.75 2.75 0 0 0 22.75 14.5v-8A2.75 2.75 0 0 0 20 3.75H4zm3.25 6a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm4.75 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm4.75 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/></svg><span class="badge">3</span></a>
+      <a class="rail-item" href="mcp.html" title="MCP"><svg class="rail-svg rail-svg-mcp" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-35 12 12)" fill="none" stroke="#A8AEB8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4.5" width="8" height="4" rx="1.2" fill="#C5CAD3" stroke="#9AA1AC"/><path d="M9.2 8.5h5.6v5.2a2.8 2.8 0 0 1-2.8 2.8h0a2.8 2.8 0 0 1-2.8-2.8V8.5z" fill="#B0B6C0" stroke="#8E959F"/><path d="M10.3 16.5v3M13.7 16.5v3"/><path d="M7.2 10.2H5.5M18.5 10.2h-1.7"/></g></svg></a>
+      <a class="rail-item" href="vault.html" title="密码库"><svg class="rail-svg rail-svg-key" viewBox="0 0 24 24" aria-hidden="true"><path fill="#E8B84A" d="M14.5 3.5a5 5 0 0 0-4.74 6.6L3.2 16.66a1.2 1.2 0 0 0-.02 1.7l1.46 1.46a1.2 1.2 0 0 0 1.7 0l.7-.7.9.9a1 1 0 0 0 1.42 0l.9-.9.7.7a1 1 0 0 0 1.42 0l1.2-1.2a1.2 1.2 0 0 0 0-1.7l-3.3-3.3A5 5 0 0 0 14.5 3.5zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></svg></a>
+      <a class="rail-item" href="tasks.html" title="自动化任务"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3.75A.75.75 0 0 1 7.75 3h.5a.75.75 0 0 1 .75.75V5h6.5V3.75a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 .75.75V5h1.5A2.75 2.75 0 0 1 21.5 7.75v11A2.75 2.75 0 0 1 18.75 21.5H5.25A2.75 2.75 0 0 1 2.5 18.75v-11A2.75 2.75 0 0 1 5.25 5H6.75V3.75zM4.5 9.5v9.25c0 .69.56 1.25 1.25 1.25h13.5c.69 0 1.25-.56 1.25-1.25V9.5H4.5zm3.25 3.25h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1 0-1.5zm0 3.5h6.5a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5z"/></svg></a>
+      <div class="rail-spacer"></div>
+      <a class="rail-item" href="settings.html" title="设置"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.07 7.07 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.68.22l2.39-.96c.5.4 1.05.72 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96c.25.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></a>
+    </nav>
+
+    <aside class="sessions" aria-label="通讯录">
+      <div class="sessions-top">
+        <input class="search-input" type="search" placeholder="搜索好友或群" aria-label="搜索通讯录" />
+        <button class="btn-icon" type="button" title="新建">＋</button>
+      </div>
+      <div class="session-tabs" role="tablist" aria-label="通讯录分类">
+        <button class="session-tab is-active" type="button" role="tab" aria-selected="true">全部</button>
+        <button class="session-tab" type="button" role="tab" aria-selected="false">好友</button>
+        <button class="session-tab" type="button" role="tab" aria-selected="false">群组</button>
+      </div>
+      <div class="session-list">
+        <button class="session is-active is-pinned" type="button">
+          <div class="av av-seal">印</div>
+          <div class="session-meta">
+            <div class="session-row1">
+              <span class="session-name">群主 <span class="session-pin" title="置顶模板">置顶</span></span>
+              <span class="session-time">刚刚</span>
+            </div>
+            <div class="session-row2">
+              <span class="session-preview">本回合注入了三层记忆…</span>
+            </div>
+          </div>
+        </button>
+        <button class="session" type="button">
+          <div class="av av-prod">产</div>
+          <div class="session-meta">
+            <div class="session-row1">
+              <span class="session-name">产品经理</span>
+              <span class="session-time">今天</span>
+            </div>
+            <div class="session-row2">
+              <span class="session-preview">p0.9：写入与注入可感知</span>
+            </div>
+          </div>
+        </button>
+        <button class="session" type="button">
+          <div class="av av-group">群</div>
+          <div class="session-meta">
+            <div class="session-row1">
+              <span class="session-name">web智能体的开发</span>
+              <span class="session-time">昨天</span>
+            </div>
+            <div class="session-row2">
+              <span class="session-preview">技术开发: 等分层记忆稿…</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <main class="chat" aria-label="聊天" style="position:relative">
+      <header class="chat-hd" style="position:relative">
+        <div class="chat-hd-row">
+          <span class="chat-title">群主</span>
+          <button class="chip" type="button" title="当前模型">Ollama · qwen2.5:7b</button>
+          <div class="grow"></div>
+          <a class="btn-icon chat-gear" href="friends.html?id=owner" title="好友设置" aria-label="好友设置"><svg class="chat-gear-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.07 7.07 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.68.22l2.39-.96c.5.4 1.05.72 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96c.25.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></a>
+        </div>
+        <div class="chat-hd-tools" aria-label="会话工具">
+          <button class="chip chip-memory" id="btnChipSummary" type="button" title="会话摘要将注入后续回合" aria-expanded="false"><span class="dot" aria-hidden="true"></span>摘要已注入</button>
+          <button class="chip chip-ltm" id="btnChipLtm" type="button" title="跨会话持久；与会话摘要不同" aria-expanded="false"><span class="dot" aria-hidden="true"></span>长期记忆 · 4</button>
+          <button class="chip chip-layers" id="btnLayers" type="button" title="打开分层记忆" aria-expanded="true" aria-controls="layersPanel">记忆 · 三层</button>
+        </div>
+
+        <!-- 统一分层记忆面板：工作｜摘要｜长期（摘要≠长期） -->
+        <div class="summary-panel layers-panel is-open" id="layersPanel" role="dialog" aria-label="分层记忆">
+          <div class="summary-panel-hd">
+            <h3>记忆</h3>
+            <span class="tag">分层可感知</span>
+            <button class="panel-close" id="btnCloseLayers" type="button" aria-label="关闭">✕</button>
+          </div>
+          <div class="layer-tabs" role="tablist" aria-label="记忆层">
+            <button class="layer-tab" type="button" role="tab" aria-selected="false" data-layer="working">工作</button>
+            <button class="layer-tab is-active" type="button" role="tab" aria-selected="true" data-layer="summary">摘要</button>
+            <button class="layer-tab" type="button" role="tab" aria-selected="false" data-layer="ltm">长期</button>
+          </div>
+          <div class="summary-panel-bd">
+            <!-- 工作记忆 -->
+            <div class="layer-pane" id="paneWorking" hidden data-pane="working">
+              <p class="ltm-help">本回合临时上下文，<strong>随回合/会话结束清空</strong>（演示）。不跨会话。</p>
+              <div class="working-list inset-group">
+                <div class="working-item">
+                  <div class="working-title">用户刚提到「分层记忆加深」</div>
+                  <div class="working-meta">工作记忆 · 本回合 · 即将清空</div>
+                </div>
+                <div class="working-item">
+                  <div class="working-title">待核对：写入 toast + 注入来源条</div>
+                  <div class="working-meta">工作记忆 · 本回合</div>
+                </div>
+              </div>
+            </div>
+            <!-- 会话摘要 -->
+            <div class="layer-pane" id="paneSummary" data-pane="summary">
+              <div class="summary-meta">
+                <span>自动生成 · 今天 10:18（Asia/Shanghai）</span>
+                <span class="tag tag-ok">写入记忆</span>
+                <span class="tag">仅本会话</span>
+              </div>
+              <div class="summary-body">
+                <p><strong>要点</strong></p>
+                <ul>
+                  <li>三层：工作记忆 → 会话摘要 → 好友/项目长期。</li>
+                  <li>写入后出 toast；本回合注入用来源条可点预览。</li>
+                  <li>摘要 ≠ 长期：摘要只服务当前会话。</li>
+                </ul>
+              </div>
+              <div class="layer-pane-actions">
+                <button class="btn btn-ghost btn-sm" type="button" id="btnPromoteLtm" title="非挡演示：摘要要点升好友长期（需确认）">升为长期…</button>
+                <button class="btn btn-secondary btn-sm" type="button" id="btnRegenSummary">手动生成摘要</button>
+                <button class="btn btn-sm" type="button" id="btnWriteSummaryDemo">演示写入</button>
+              </div>
+            </div>
+            <!-- 长期（好友｜项目） -->
+            <div class="layer-pane" id="paneLtm" hidden data-pane="ltm">
+              <p class="ltm-help">挂在<strong>好友</strong>或<strong>项目/群</strong>上，跨会话注入。<strong>≠</strong> 会话摘要。</p>
+              <div class="session-tabs ltm-scope" role="tablist" aria-label="长期作用域" style="margin:8px 0 10px">
+                <button class="session-tab is-active" type="button" role="tab" aria-selected="true" data-scope="friend">好友</button>
+                <button class="session-tab" type="button" role="tab" aria-selected="false" data-scope="project">项目/群</button>
+              </div>
+              <div class="ltm-scope-label" id="ltmScopeLabel">群主 · 4 条</div>
+              <div class="inset-group ltm-list" id="ltmFriendList">
+                <div class="ltm-item">
+                  <div class="ltm-item-main">
+                    <div class="ltm-title">默认打开并置顶「群主」模板好友</div>
+                    <div class="ltm-meta"><span class="tag tag-ok">自动提炼</span> · 今天 09:20（Asia/Shanghai）</div>
+                  </div>
+                  <label class="ltm-inject"><input type="checkbox" checked /> 注入</label>
+                </div>
+                <div class="ltm-item">
+                  <div class="ltm-item-main">
+                    <div class="ltm-title">摘要与长期必须文案/样式区分</div>
+                    <div class="ltm-meta"><span class="tag">手动添加</span> · 今天 10:05（Asia/Shanghai）</div>
+                  </div>
+                  <label class="ltm-inject"><input type="checkbox" checked /> 注入</label>
+                </div>
+              </div>
+              <div class="inset-group ltm-list" id="ltmProjectList" hidden>
+                <div class="ltm-item">
+                  <div class="ltm-item-main">
+                    <div class="ltm-title">项目：web智能体的开发 · QQ 三栏 + Apple HIG</div>
+                    <div class="ltm-meta"><span class="tag tag-ok">自动提炼</span> · 今天 08:55（Asia/Shanghai）</div>
+                  </div>
+                  <label class="ltm-inject"><input type="checkbox" checked /> 注入</label>
+                </div>
+                <div class="ltm-item">
+                  <div class="ltm-item-main">
+                    <div class="ltm-title">p0.8 已基线；当前开 p0.9 分层记忆</div>
+                    <div class="ltm-meta"><span class="tag">手动添加</span> · 今天 10:12（Asia/Shanghai）</div>
+                  </div>
+                  <label class="ltm-inject"><input type="checkbox" checked /> 注入</label>
+                </div>
+              </div>
+              <div class="layer-pane-actions">
+                <a class="btn btn-secondary btn-sm" href="long-term-memory.html">完整 LTM</a>
+                <button class="btn btn-sm" type="button" id="btnWriteLtmDemo">演示写入好友</button>
+              </div>
+            </div>
+          </div>
+          <div class="summary-panel-ft">
+            <a class="btn btn-ghost btn-sm" href="summary-memory.html">早期摘要稿</a>
+            <button class="btn btn-sm" type="button" id="btnDoneLayers">完成</button>
+          </div>
+        </div>
+
+        <!-- 来源预览浮层（点 inject chip） -->
+        <div class="inject-preview" id="injectPreview" hidden role="dialog" aria-label="注入来源预览">
+          <div class="inject-preview-hd">
+            <span class="inject-preview-title" id="injectPreviewTitle">会话摘要</span>
+            <button class="panel-close" type="button" id="btnCloseInjectPreview" aria-label="关闭">✕</button>
+          </div>
+          <div class="inject-preview-bd" id="injectPreviewBody"></div>
+        </div>
+      </header>
+
+      <div class="chat-bd" id="chatBody">
+        <div class="memory-banner" role="status">
+          <span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--success);display:inline-block"></span>
+          <span><strong>会话摘要</strong> 已写入 · 仅本会话后续回合</span>
+          <button class="linkish" type="button" data-open-layer="summary">查看</button>
+        </div>
+        <div class="memory-banner memory-banner-ltm" role="status">
+          <span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block"></span>
+          <span><strong>已注入好友长期记忆</strong>（4 条）· 与摘要分开</span>
+          <button class="linkish" type="button" data-open-layer="ltm">管理</button>
+        </div>
+
+        <div class="msg msg-me">
+          <div class="av av-sm av-me">我</div>
+          <div class="msg-stack" style="align-items:flex-end">
+            <div class="msg-who" style="text-align:right;padding-right:2px">我</div>
+            <div class="bubble">按 p0.9：写入哪一层、本回合注入了哪些，我要能一眼看出来。</div>
+          </div>
+        </div>
+
+        <!-- 本回合注入来源条（助手回复前） -->
+        <div class="msg">
+          <div class="av av-sm av-seal">印</div>
+          <div class="msg-stack">
+            <div class="msg-who">群主</div>
+            <div class="inject-sources" role="group" aria-label="本回合注入来源">
+              <span class="inject-sources-label">本回合注入</span>
+              <button class="inject-chip inject-chip-working" type="button" data-source="working" title="预览工作记忆" data-count="6">工作 · 6</button>
+              <button class="inject-chip inject-chip-summary" type="button" data-source="summary" title="预览会话摘要" data-on="1">摘要 · 开</button>
+              <button class="inject-chip inject-chip-ltm-friend" type="button" data-source="ltmFriend" title="预览好友长期" data-count="4" data-scope="friend">长期 · 4 · 好友</button>
+              <button class="inject-chip inject-chip-ltm-project" type="button" data-source="ltmProject" title="预览项目长期" data-count="2" data-scope="project">长期 · 2 · 项目</button>
+            </div>
+            <div class="bubble">三层可辨：顶栏绿「摘要」/ 蓝「长期」不混色；工作层在面板「工作」页与来源条灰 chip。本回合<strong>注入来源条</strong>标明工作条数、摘要开/关、长期条数·作用域；写入用右下角 toast，不挡主聊。点 chip 预览该层片段。</div>
+          </div>
+        </div>
+
+        <div class="msg msg-me">
+          <div class="av av-sm av-me">我</div>
+          <div class="msg-stack" style="align-items:flex-end">
+            <div class="msg-who" style="text-align:right;padding-right:2px">我</div>
+            <div class="bubble">把「分层可感知」写进好友长期记忆。</div>
+          </div>
+        </div>
+
+        <div class="msg">
+          <div class="av av-sm av-seal">印</div>
+          <div class="msg-stack">
+            <div class="msg-who">群主</div>
+            <div class="inject-sources" role="group" aria-label="本回合注入来源">
+              <span class="inject-sources-label">本回合注入</span>
+              <button class="inject-chip inject-chip-working" type="button" data-source="working" data-count="4">工作 · 4</button>
+              <button class="inject-chip inject-chip-summary" type="button" data-source="summary" data-on="1">摘要 · 开</button>
+              <button class="inject-chip inject-chip-ltm-friend" type="button" data-source="ltmFriend" data-count="4" data-scope="friend">长期 · 4 · 好友</button>
+            </div>
+            <div class="bubble">已记下。写入后你会看到 toast「已写入好友长期记忆」——可在记忆面板点「演示写入」或「升为长期」再看一遍。</div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="chat-ft">
+        <div class="composer-wrap">
+          <textarea class="composer" id="composer" placeholder="输入消息，Enter 发送 · 同好友新对话输入 /new_chat" rows="3"></textarea>
+        </div>
+        <div class="ft-row">
+          <div class="ft-actions">
+            <button class="attach-btn" type="button" title="添加图片或附件" aria-label="添加图片或附件" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.5 6.5v9.25a4.5 4.5 0 1 1-9 0V6.75a3 3 0 1 1 6 0v8.5a1.5 1.5 0 1 1-3 0V7.25a.75.75 0 0 0-1.5 0v8a3 3 0 1 0 6 0V6.5a.75.75 0 0 0-1.5 0z"/></svg>
+            </button>
+            <a class="ft-action" href="index.html">主壳</a>
+            <a class="ft-action muted" href="summary-memory.html">摘要稿</a>
+            <a class="ft-action muted" href="long-term-memory.html">LTM 稿</a>
+            <span class="hint" style="margin-left:6px">Enter 发送 · /new_chat</span>
+          </div>
+          <button class="btn" id="btnSend" type="button" disabled>发送</button>
+        </div>
+      </footer>
+
+      <!-- 写入 toast：非模态、可关闭 -->
+      <div class="mem-write-toast is-show" id="memWriteToast" role="status" aria-live="polite">
+        <span class="mem-write-icon" aria-hidden="true">✓</span>
+        <span class="mem-write-text" id="memWriteText">已写入好友长期记忆</span>
+        <button class="mem-write-dismiss" type="button" id="btnDismissWrite" aria-label="关闭">✕</button>
+      </div>
+      <div class="chat-toast" id="chatToast" role="status" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <p style="position:fixed;bottom:8px;left:72px;font-size:11px;color:#888;z-index:2">p0.9 · 分层记忆 · 工作｜摘要｜长期 · 写入 toast · 注入来源条 · 摘要≠长期</p>
+
+  <script>
+    (function () {
+      var panel = document.getElementById('layersPanel');
+      var btnLayers = document.getElementById('btnLayers');
+      var toast = document.getElementById('memWriteToast');
+      var toastText = document.getElementById('memWriteText');
+      var preview = document.getElementById('injectPreview');
+      var previewTitle = document.getElementById('injectPreviewTitle');
+      var previewBody = document.getElementById('injectPreviewBody');
+      var friendList = document.getElementById('ltmFriendList');
+      var projectList = document.getElementById('ltmProjectList');
+      var scopeLabel = document.getElementById('ltmScopeLabel');
+      var composer = document.getElementById('composer');
+      var sendBtn = document.getElementById('btnSend');
+
+      var SNIPPETS = {
+        working: { title: '工作记忆', html: '<p class="inj-snip-meta">层 · working · 近 6 条 · 本回合/会话清空</p><p>用户刚提到「分层记忆加深」；待核对写入 toast + 注入来源条。数据：memoryInject.working.count。</p>' },
+        summary: { title: '会话摘要', html: '<p class="inj-snip-meta">层 · summary · injectOnNextTurn=开 · 仅本会话</p><ul><li>三层：工作 → 摘要 → 长期</li><li>写入 toast；来源条「摘要 · 开/关」</li><li>摘要 ≠ 长期</li></ul>' },
+        ltmFriend: { title: '长期 · 好友', html: '<p class="inj-snip-meta">层 · ltmFriend · 跨会话</p><ul><li>默认打开并置顶「群主」</li><li>摘要与长期必须区分</li></ul>' },
+        ltmProject: { title: '长期 · 项目', html: '<p class="inj-snip-meta">层 · ltmProject · 跨会话</p><ul><li>web智能体的开发 · QQ 三栏 + HIG</li><li>p0.8 基线 → p0.9 分层记忆</li></ul>' }
+      };
+
+      function setPanel(open) {
+        panel.classList.toggle('is-open', open);
+        if (open) panel.removeAttribute('hidden'); else panel.setAttribute('hidden', '');
+        btnLayers.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+
+      function showLayer(layer) {
+        document.querySelectorAll('.layer-tab').forEach(function (t) {
+          var on = t.getAttribute('data-layer') === layer;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        document.querySelectorAll('.layer-pane').forEach(function (p) {
+          var on = p.getAttribute('data-pane') === layer;
+          if (on) p.removeAttribute('hidden'); else p.setAttribute('hidden', '');
+        });
+      }
+
+      function showWriteToast(msg, variant) {
+        toastText.textContent = msg;
+        toast.classList.remove('is-summary', 'is-ltm', 'is-working');
+        if (variant) toast.classList.add(variant);
+        toast.classList.add('is-show');
+        clearTimeout(showWriteToast._t);
+        showWriteToast._t = setTimeout(function () {
+          toast.classList.remove('is-show');
+        }, 4200);
+      }
+
+      function openPreview(source) {
+        var s = SNIPPETS[source];
+        if (!s) return;
+        previewTitle.textContent = s.title;
+        previewBody.innerHTML = s.html;
+        preview.removeAttribute('hidden');
+      }
+
+      function closePreview() {
+        preview.setAttribute('hidden', '');
+      }
+
+      btnLayers.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setPanel(!panel.classList.contains('is-open'));
+      });
+      document.getElementById('btnCloseLayers').addEventListener('click', function () { setPanel(false); });
+      document.getElementById('btnDoneLayers').addEventListener('click', function () { setPanel(false); });
+
+      document.getElementById('btnChipSummary').addEventListener('click', function (e) {
+        e.stopPropagation();
+        setPanel(true);
+        showLayer('summary');
+      });
+      document.getElementById('btnChipLtm').addEventListener('click', function (e) {
+        e.stopPropagation();
+        setPanel(true);
+        showLayer('ltm');
+      });
+
+      document.querySelectorAll('.layer-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          showLayer(tab.getAttribute('data-layer'));
+        });
+      });
+
+      document.querySelectorAll('[data-open-layer]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setPanel(true);
+          showLayer(btn.getAttribute('data-open-layer'));
+        });
+      });
+
+      document.querySelectorAll('.ltm-scope .session-tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          document.querySelectorAll('.ltm-scope .session-tab').forEach(function (t) {
+            var on = t === tab;
+            t.classList.toggle('is-active', on);
+            t.setAttribute('aria-selected', on ? 'true' : 'false');
+          });
+          var scope = tab.getAttribute('data-scope');
+          if (scope === 'project') {
+            friendList.setAttribute('hidden', '');
+            projectList.removeAttribute('hidden');
+            scopeLabel.textContent = 'web智能体的开发 · 2 条';
+          } else {
+            projectList.setAttribute('hidden', '');
+            friendList.removeAttribute('hidden');
+            scopeLabel.textContent = '群主 · 4 条';
+          }
+        });
+      });
+
+      document.getElementById('btnWriteSummaryDemo').addEventListener('click', function () {
+        showWriteToast('已写入会话摘要', 'is-summary');
+      });
+      document.getElementById('btnWriteLtmDemo').addEventListener('click', function () {
+        showWriteToast('已写入好友长期记忆', 'is-ltm');
+      });
+      document.getElementById('btnRegenSummary').addEventListener('click', function () {
+        var meta = document.querySelector('#paneSummary .summary-meta span');
+        if (meta) meta.textContent = '手动生成中…';
+        setTimeout(function () {
+          if (meta) meta.textContent = '手动生成 · 刚刚（Asia/Shanghai）';
+          showWriteToast('已写入会话摘要', 'is-summary');
+        }, 500);
+      });
+
+      document.getElementById('btnDismissWrite').addEventListener('click', function () {
+        toast.classList.remove('is-show');
+      });
+
+      document.querySelectorAll('.inject-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          openPreview(chip.getAttribute('data-source'));
+        });
+      });
+      document.getElementById('btnCloseInjectPreview').addEventListener('click', closePreview);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          setPanel(false);
+          closePreview();
+          toast.classList.remove('is-show');
+        }
+      });
+
+      document.getElementById('btnPromoteLtm').addEventListener('click', function () {
+        // 非挡：示意确认门闩后升层；本 demo 直接 toast，不静默写入
+        if (!window.confirm('将摘要要点升为「好友长期记忆」？未确认不落库。')) return;
+        showWriteToast('已写入好友长期记忆', 'is-ltm');
+        showLayer('ltm');
+      });
+
+      function syncSend() {
+        sendBtn.disabled = !(composer.value || '').trim();
+      }
+      composer.addEventListener('input', syncSend);
+      composer.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          if ((composer.value || '').trim() === '/new_chat') {
+            composer.value = '';
+            syncSend();
+            document.getElementById('chatToast').textContent = '已开新线程（演示）';
+            document.getElementById('chatToast').classList.add('is-show');
+            setTimeout(function () { document.getElementById('chatToast').classList.remove('is-show'); }, 1800);
+            return;
+          }
+          if (!sendBtn.disabled) {
+            /* demo only */
+            composer.value = '';
+            syncSend();
+          }
+        }
+      });
+      syncSend();
+      showLayer('summary');
+    })();
+  </script>
+</body>
+</html>

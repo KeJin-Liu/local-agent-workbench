@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>本地智能体工作台 · 气泡 Markdown（p0.8.1）</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <nav class="rail" aria-label="主导航">
+      <div class="rail-avatar" title="我">我</div>
+      <a class="rail-item is-active" href="index.html" title="会话"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3.75A2.75 2.75 0 0 0 1.25 6.5v8A2.75 2.75 0 0 0 4 17.25h1.75V20.5a.75.75 0 0 0 1.22.58L11.3 17.25H20A2.75 2.75 0 0 0 22.75 14.5v-8A2.75 2.75 0 0 0 20 3.75H4zm3.25 6a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm4.75 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm4.75 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/></svg><span class="badge">3</span></a>
+      <a class="rail-item" href="mcp.html" title="MCP"><svg class="rail-svg rail-svg-mcp" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-35 12 12)" fill="none" stroke="#A8AEB8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4.5" width="8" height="4" rx="1.2" fill="#C5CAD3" stroke="#9AA1AC"/><path d="M9.2 8.5h5.6v5.2a2.8 2.8 0 0 1-2.8 2.8h0a2.8 2.8 0 0 1-2.8-2.8V8.5z" fill="#B0B6C0" stroke="#8E959F"/><path d="M10.3 16.5v3M13.7 16.5v3"/><path d="M7.2 10.2H5.5M18.5 10.2h-1.7"/></g></svg></a>
+      <a class="rail-item" href="vault.html" title="密码库"><svg class="rail-svg rail-svg-key" viewBox="0 0 24 24" aria-hidden="true"><path fill="#E8B84A" d="M14.5 3.5a5 5 0 0 0-4.74 6.6L3.2 16.66a1.2 1.2 0 0 0-.02 1.7l1.46 1.46a1.2 1.2 0 0 0 1.7 0l.7-.7.9.9a1 1 0 0 0 1.42 0l.9-.9.7.7a1 1 0 0 0 1.42 0l1.2-1.2a1.2 1.2 0 0 0 0-1.7l-3.3-3.3A5 5 0 0 0 14.5 3.5zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></svg></a>
+      <a class="rail-item" href="tasks.html" title="自动化任务"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3.75A.75.75 0 0 1 7.75 3h.5a.75.75 0 0 1 .75.75V5h6.5V3.75a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 .75.75V5h1.5A2.75 2.75 0 0 1 21.5 7.75v11A2.75 2.75 0 0 1 18.75 21.5H5.25A2.75 2.75 0 0 1 2.5 18.75v-11A2.75 2.75 0 0 1 5.25 5H6.75V3.75zM4.5 9.5v9.25c0 .69.56 1.25 1.25 1.25h13.5c.69 0 1.25-.56 1.25-1.25V9.5H4.5zm3.25 3.25h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1 0-1.5zm0 3.5h6.5a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5z"/></svg></a>
+      <div class="rail-spacer"></div>
+      <a class="rail-item" href="settings.html" title="设置"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.07 7.07 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.68.22l2.39-.96c.5.4 1.05.72 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96c.25.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></a>
+    </nav>
+
+    <aside class="sessions" aria-label="通讯录">
+      <div class="sessions-top">
+        <input class="search-input" type="search" placeholder="搜索好友或群" aria-label="搜索通讯录" />
+        <button class="btn-icon" type="button" title="新建">＋</button>
+      </div>
+      <div class="session-tabs" role="tablist" aria-label="通讯录分类">
+        <button class="session-tab is-active" type="button" role="tab" aria-selected="true">全部</button>
+        <button class="session-tab" type="button" role="tab" aria-selected="false">好友</button>
+        <button class="session-tab" type="button" role="tab" aria-selected="false">群组</button>
+      </div>
+      <div class="session-list">
+        <button class="session is-active is-pinned" type="button">
+          <div class="av av-seal">印</div>
+          <div class="session-meta">
+            <div class="session-row1">
+              <span class="session-name">群主 <span class="session-pin" title="置顶模板">置顶</span></span>
+              <span class="session-time">刚刚</span>
+            </div>
+            <div class="session-row2">
+              <span class="session-preview">气泡 Markdown 已渲染，无裸 **…</span>
+            </div>
+          </div>
+        </button>
+        <button class="session" type="button">
+          <div class="av av-prod">产</div>
+          <div class="session-meta">
+            <div class="session-row1">
+              <span class="session-name">产品经理</span>
+              <span class="session-time">今天</span>
+            </div>
+            <div class="session-row2">
+              <span class="session-preview">p0.8.1：气泡要渲染 MD</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <main class="chat" aria-label="聊天">
+      <header class="chat-hd">
+        <div class="chat-hd-row">
+          <span class="chat-title">群主</span>
+          <button class="chip" type="button" title="当前模型">DeepSeek · deepseek-chat</button>
+          <div class="grow"></div>
+          <a class="btn-icon chat-gear" href="friends.html?id=owner" title="好友设置" aria-label="好友设置"><svg class="chat-gear-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.07 7.07 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.68.22l2.39-.96c.5.4 1.05.72 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96c.25.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></a>
+        </div>
+        <div class="chat-hd-tools" aria-label="演示">
+          <span class="demo-label">p0.8.1 · 气泡 Markdown</span>
+          <a class="chip chip-muted" href="index.html">回主壳</a>
+        </div>
+      </header>
+
+      <div class="chat-bd" id="chatBody">
+        <div class="msg msg-me">
+          <div class="av av-sm av-me">我</div>
+          <div class="msg-stack" style="align-items:flex-end">
+            <div class="msg-who" style="text-align:right;padding-right:2px">我</div>
+            <div class="bubble">请用 Markdown 说明：技能、MCP、自动化各能做什么？</div>
+          </div>
+        </div>
+
+        <div class="msg">
+          <div class="av av-sm av-seal">印</div>
+          <div class="msg-stack">
+            <div class="msg-who">群主 · 已渲染</div>
+            <p class="md-demo-note">演示：助手气泡用 <code>.bubble.markdown</code> + 轻量渲染；生产接真实 MD 解析器（marked / markdown-it 等）。勿把裸 <code>**</code> 当正文展示。</p>
+            <div class="bubble markdown" id="mdLive" data-md></div>
+          </div>
+        </div>
+
+        <div class="msg">
+          <div class="av av-sm av-seal">印</div>
+          <div class="msg-stack">
+            <div class="msg-who">群主 · 静态预渲染对照</div>
+            <div class="bubble bubble-md">
+              <h3>能力一览</h3>
+              <p>本工作台可以沉淀 <strong>技能</strong>、<em>MCP 服务</em> 与自动化任务。</p>
+              <ul>
+                <li><strong>技能</strong>：可复用步骤清单，挂到好友</li>
+                <li><strong>MCP</strong>：本地工具能力扩展</li>
+                <li><strong>自动化</strong>：Cron / 手动跑任务</li>
+              </ul>
+              <p>行内代码：<code>workbench_propose</code>；链接：<a href="propose.html">提议卡</a>。</p>
+              <pre><code>kind: skill | mcp | task | friend</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="chat-ft">
+        <textarea class="composer" placeholder="输入消息，Enter 发送 · /new_chat">气泡要渲染 Markdown，不要裸 **加粗**</textarea>
+        <div class="ft-row">
+          <div class="ft-actions">
+            <span class="hint">p0.8.1 · .bubble.markdown / .bubble-md · 轻量 renderMd</span>
+          </div>
+          <button class="btn" type="button">发送</button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      // Minimal client-side MD for demo (bold/italic/code/fence/lists/links/headings). Tech can mirror or swap for marked.
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+      function inlineMd(s) {
+        s = escapeHtml(s);
+        s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+        s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+        return s;
+      }
+      function renderMd(src) {
+        var lines = String(src).replace(/\r\n/g, '\n').split('\n');
+        var html = [];
+        var i = 0;
+        var inUl = false, inOl = false, inFence = false, fence = [];
+        function closeLists() {
+          if (inUl) { html.push('</ul>'); inUl = false; }
+          if (inOl) { html.push('</ol>'); inOl = false; }
+        }
+        while (i < lines.length) {
+          var line = lines[i];
+          if (inFence) {
+            if (/^```/.test(line)) {
+              html.push('<pre><code>' + escapeHtml(fence.join('\n')) + '</code></pre>');
+              fence = []; inFence = false;
+            } else fence.push(line);
+            i++; continue;
+          }
+          if (/^```/.test(line)) {
+            closeLists(); inFence = true; fence = []; i++; continue;
+          }
+          var hm = /^(#{1,3})\s+(.+)$/.exec(line);
+          if (hm) {
+            closeLists();
+            var lvl = hm[1].length;
+            html.push('<h' + lvl + '>' + inlineMd(hm[2]) + '</h' + lvl + '>');
+            i++; continue;
+          }
+          var ul = /^[-*]\s+(.+)$/.exec(line);
+          if (ul) {
+            if (inOl) { html.push('</ol>'); inOl = false; }
+            if (!inUl) { html.push('<ul>'); inUl = true; }
+            html.push('<li>' + inlineMd(ul[1]) + '</li>');
+            i++; continue;
+          }
+          var ol = /^(\d+)\.\s+(.+)$/.exec(line);
+          if (ol) {
+            if (inUl) { html.push('</ul>'); inUl = false; }
+            if (!inOl) { html.push('<ol>'); inOl = true; }
+            html.push('<li>' + inlineMd(ol[2]) + '</li>');
+            i++; continue;
+          }
+          if (/^\s*$/.test(line)) { closeLists(); i++; continue; }
+          closeLists();
+          html.push('<p>' + inlineMd(line) + '</p>');
+          i++;
+        }
+        closeLists();
+        if (inFence) html.push('<pre><code>' + escapeHtml(fence.join('\n')) + '</code></pre>');
+        return html.join('');
+      }
+
+      var SAMPLE =
+        '### 我能帮你做什么\n\n' +
+        '本工作台可以沉淀 **技能**、*MCP 服务* 与自动化任务。\n\n' +
+        '- **技能**：可复用步骤，挂到好友\n' +
+        '- **MCP**：本地工具扩展\n' +
+        '- **自动化**：Cron / 手动跑\n\n' +
+        '行内 `workbench_propose`；详见 [提议卡](propose.html)。\n\n' +
+        '```\nkind: skill | mcp | task | friend\n```';
+
+      var el = document.getElementById('mdLive');
+      el.innerHTML = renderMd(SAMPLE);
+      window.__renderMd = renderMd;
+    })();
+  </script>
+</body>
+</html>

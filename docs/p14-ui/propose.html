@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>本地智能体工作台 · 模型提议 ConfirmCard（p1.4）</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <nav class="rail" aria-label="主导航">
+      <div class="rail-avatar" title="我">我</div>
+      <a class="rail-item is-active" href="index.html" title="会话"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3.75A2.75 2.75 0 0 0 1.25 6.5v8A2.75 2.75 0 0 0 4 17.25h1.75V20.5a.75.75 0 0 0 1.22.58L11.3 17.25H20A2.75 2.75 0 0 0 22.75 14.5v-8A2.75 2.75 0 0 0 20 3.75H4zm3.25 6a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm4.75 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm4.75 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/></svg><span class="badge">3</span></a>
+      <a class="rail-item" href="mcp.html" title="MCP"><svg class="rail-svg rail-svg-mcp" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-35 12 12)" fill="none" stroke="#A8AEB8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4.5" width="8" height="4" rx="1.2" fill="#C5CAD3" stroke="#9AA1AC"/><path d="M9.2 8.5h5.6v5.2a2.8 2.8 0 0 1-2.8 2.8h0a2.8 2.8 0 0 1-2.8-2.8V8.5z" fill="#B0B6C0" stroke="#8E959F"/><path d="M10.3 16.5v3M13.7 16.5v3"/><path d="M7.2 10.2H5.5M18.5 10.2h-1.7"/></g></svg></a>
+      <a class="rail-item" href="vault.html" title="密码库"><svg class="rail-svg rail-svg-key" viewBox="0 0 24 24" aria-hidden="true"><path fill="#E8B84A" d="M14.5 3.5a5 5 0 0 0-4.74 6.6L3.2 16.66a1.2 1.2 0 0 0-.02 1.7l1.46 1.46a1.2 1.2 0 0 0 1.7 0l.7-.7.9.9a1 1 0 0 0 1.42 0l.9-.9.7.7a1 1 0 0 0 1.42 0l1.2-1.2a1.2 1.2 0 0 0 0-1.7l-3.3-3.3A5 5 0 0 0 14.5 3.5zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></svg></a>
+      <a class="rail-item" href="tasks.html" title="自动化任务"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3.75A.75.75 0 0 1 7.75 3h.5a.75.75 0 0 1 .75.75V5h6.5V3.75a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 .75.75V5h1.5A2.75 2.75 0 0 1 21.5 7.75v11A2.75 2.75 0 0 1 18.75 21.5H5.25A2.75 2.75 0 0 1 2.5 18.75v-11A2.75 2.75 0 0 1 5.25 5H6.75V3.75zM4.5 9.5v9.25c0 .69.56 1.25 1.25 1.25h13.5c.69 0 1.25-.56 1.25-1.25V9.5H4.5zm3.25 3.25h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1 0-1.5zm0 3.5h6.5a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5z"/></svg></a>
+      <div class="rail-spacer"></div>
+      <a class="rail-item" href="settings.html" title="设置"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.07 7.07 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.68.22l2.39-.96c.5.4 1.05.72 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96c.25.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></a>
+    </nav>
+
+    <aside class="sessions" aria-label="通讯录">
+      <div class="sessions-top">
+        <input class="search-input" type="search" placeholder="搜索好友或群" aria-label="搜索通讯录" />
+        <button class="btn-icon" type="button" title="新建">＋</button>
+      </div>
+      <div class="session-tabs" role="tablist" aria-label="通讯录分类">
+        <button class="session-tab is-active" type="button" role="tab" aria-selected="true">全部</button>
+        <button class="session-tab" type="button" role="tab" aria-selected="false">好友</button>
+        <button class="session-tab" type="button" role="tab" aria-selected="false">群组</button>
+      </div>
+      <div class="session-list">
+        <button class="session is-active is-pinned" type="button">
+          <div class="av av-seal">印</div>
+          <div class="session-meta">
+            <div class="session-row1">
+              <span class="session-name">群主 <span class="session-pin" title="置顶模板">置顶</span></span>
+              <span class="session-time">刚刚</span>
+            </div>
+            <div class="session-row2">
+              <span class="session-preview">对话可写全部配置…</span>
+            </div>
+          </div>
+        </button>
+        <button class="session" type="button">
+          <div class="av av-prod">产</div>
+          <div class="session-meta">
+            <div class="session-row1">
+              <span class="session-name">产品经理</span>
+              <span class="session-time">今天</span>
+            </div>
+            <div class="session-row2">
+              <span class="session-preview">p1.4：确认门闩才落库</span>
+            </div>
+          </div>
+        </button>
+        <button class="session" type="button">
+          <div class="av av-group">群</div>
+          <div class="session-meta">
+            <div class="session-row1">
+              <span class="session-name">web智能体的开发</span>
+              <span class="session-time">昨天</span>
+            </div>
+            <div class="session-row2">
+              <span class="session-preview">技术开发: 等提议卡稿…</span>
+            </div>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <main class="chat" aria-label="聊天">
+      <header class="chat-hd">
+        <div class="chat-hd-row">
+          <span class="chat-title">群主</span>
+          <button class="chip" type="button" title="当前模型">DeepSeek · deepseek-chat</button>
+          <div class="grow"></div>
+          <a class="btn-icon chat-gear" href="friends.html?id=owner" title="好友设置" aria-label="好友设置"><svg class="chat-gear-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.07 7.07 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.68.22l2.39-.96c.5.4 1.05.72 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96c.25.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></a>
+        </div>
+        <div class="chat-hd-tools propose-kind-tools" aria-label="演示切换">
+          <div class="kind-segs">
+            <div class="kind-seg-row">
+              <span class="demo-label">既有</span>
+              <div class="seg" id="kindSegLegacy" role="tablist" aria-label="既有提议类型">
+                <button type="button" class="seg-btn is-active" role="tab" aria-selected="true" data-kind="skill">Skill</button>
+                <button type="button" class="seg-btn" role="tab" aria-selected="false" data-kind="mcp">MCP</button>
+                <button type="button" class="seg-btn" role="tab" aria-selected="false" data-kind="task">自动化</button>
+                <button type="button" class="seg-btn" role="tab" aria-selected="false" data-kind="friend">好友</button>
+              </div>
+            </div>
+            <div class="kind-seg-row">
+              <span class="demo-label">p1.4</span>
+              <div class="seg" id="kindSegNew" role="tablist" aria-label="配置写入提议类型">
+                <button type="button" class="seg-btn" role="tab" aria-selected="false" data-kind="provider">提供方</button>
+                <button type="button" class="seg-btn" role="tab" aria-selected="false" data-kind="app_settings">应用设置</button>
+                <button type="button" class="seg-btn" role="tab" aria-selected="false" data-kind="friend_patch">好友补丁</button>
+                <button type="button" class="seg-btn" role="tab" aria-selected="false" data-kind="group">群组</button>
+                <button type="button" class="seg-btn" role="tab" aria-selected="false" data-kind="vault_binding">保险库</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="chat-bd" id="chatBody">
+        <div class="msg msg-me">
+          <div class="av av-sm av-me">我</div>
+          <div class="msg-stack" style="align-items:flex-end">
+            <div class="msg-who" style="text-align:right;padding-right:2px">我</div>
+            <div class="bubble" id="userAsk">帮我把「验收三步」存成技能，给产品经理和技术开发用。</div>
+          </div>
+        </div>
+
+        <!-- (a) 等待确认门闩（主交互 · 一次一卡） -->
+        <div class="msg" id="msgDraft">
+          <div class="av av-sm av-seal">印</div>
+          <div class="msg-stack">
+            <div class="msg-who">群主</div>
+            <div class="bubble" id="assistBubble">可以。先选作用域，再点确认才会写入；取消则丢弃草稿。</div>
+            <div class="confirm-card" id="proposeCard" role="group" aria-label="提议创建" data-status="pending" data-kind="skill" data-proposal-id="prop_demo_01">
+              <div class="confirm-card-hd">
+                <div class="cc-icon" id="ccIcon">✨</div>
+                <div>
+                  <div class="cc-kind" id="ccKind">Skill</div>
+                  <div class="cc-title" id="ccTitle">创建技能</div>
+                  <div class="cc-sub" id="ccSub">验收三步清单 · 3 步 · 未确认不落库</div>
+                </div>
+              </div>
+              <div class="confirm-card-bd" id="ccBody">
+                <div class="propose-fields" id="proposeFields">
+                  <!-- legacy name + summary (skill|mcp|task) -->
+                  <div id="legacyFields">
+                    <div class="inset-section-title" style="margin-top:2px" id="fieldNameLabel">名称</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="fieldName" value="验收三步清单" aria-label="名称" />
+                      </div>
+                    </div>
+                    <div id="fieldSummaryWrap">
+                      <div class="inset-section-title">摘要</div>
+                      <p class="propose-summary" id="fieldSummary">1. 对照方案验收 2. 抽确认卡 3. 交包截图</p>
+                    </div>
+                  </div>
+
+                  <!-- friend create -->
+                  <div class="propose-friend-fields" id="friendFields" hidden>
+                    <div class="inset-section-title">人设 / 简介</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <textarea id="fieldPersona" rows="3" aria-label="人设或简介" placeholder="可选：系统提示词 / 人设说明">专注小程序业务；输出短、可执行；不做视觉稿。</textarea>
+                      </div>
+                    </div>
+                    <div class="inset-section-title">默认模型（可选）</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="fieldDefaultModel" value="deepseek-chat" aria-label="默认模型" placeholder="如 deepseek-chat；可留空" />
+                      </div>
+                    </div>
+                    <p class="field-help">确认后写入好友通讯录；通讯录「＋ → 新建好友」入口仍保留。</p>
+                  </div>
+
+                  <!-- p1.4 provider -->
+                  <div class="propose-config-fields" id="providerFields" hidden>
+                    <div class="inset-section-title">名称</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="pvName" value="DeepSeek" aria-label="提供方名称" />
+                      </div>
+                    </div>
+                    <div class="inset-section-title">Base URL</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="pvBase" value="https://api.deepseek.com" aria-label="Base URL" />
+                      </div>
+                    </div>
+                    <div class="inset-section-title">默认模型</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="pvModel" value="deepseek-chat" aria-label="默认模型" />
+                      </div>
+                    </div>
+                    <div class="inset-section-title">API Key（脱敏）</div>
+                    <div class="inset-group" style="margin-bottom:8px">
+                      <div class="inset-row propose-key-row">
+                        <span class="masked key-mask" id="pvKeyMask" title="卡内与历史只显示末几位">sk-••••••••9f3a</span>
+                        <span class="chip chip-muted vault-bind-chip" id="pvVaultChip" title="确认后写入保险库再引用">🔐 保险库 · DeepSeek API</span>
+                      </div>
+                    </div>
+                    <div class="propose-enable-row">
+                      <button class="toggle is-on" type="button" id="pvEnable" aria-pressed="true" title="启用"></button>
+                      <span>启用此提供方</span>
+                    </div>
+                    <p class="field-help">Key 落库走保险库引用；确认卡与历史永不回显完整明文。</p>
+                  </div>
+
+                  <!-- p1.4 app_settings -->
+                  <div class="propose-config-fields" id="appSettingsFields" hidden>
+                    <div class="inset-section-title">变更摘要（diff）</div>
+                    <ul class="propose-diff" id="appDiff" aria-label="应用设置 diff">
+                      <li class="propose-diff-item">
+                        <span class="diff-key">sendWaitSeconds</span>
+                        <span class="diff-old">3</span>
+                        <span class="diff-arrow" aria-hidden="true">→</span>
+                        <span class="diff-new">5</span>
+                      </li>
+                      <li class="propose-diff-item">
+                        <span class="diff-key">mailInstructions.whitelist</span>
+                        <span class="diff-old">2 项</span>
+                        <span class="diff-arrow" aria-hidden="true">→</span>
+                        <span class="diff-new">+ alice@corp.com</span>
+                      </li>
+                      <li class="propose-diff-item is-unchanged">
+                        <span class="diff-key">planModePrompt</span>
+                        <span class="diff-note">未改</span>
+                      </li>
+                      <li class="propose-diff-item is-unchanged">
+                        <span class="diff-key">skillExtractPrompt</span>
+                        <span class="diff-note">未改</span>
+                      </li>
+                    </ul>
+                    <p class="field-help">仅列出本卡 patch 字段；确认后写 app_settings，设置页可见一致结果。</p>
+                  </div>
+
+                  <!-- p1.4 friend_patch -->
+                  <div class="propose-config-fields" id="friendPatchFields" hidden>
+                    <div class="friend-patch-target">
+                      <span class="av av-xs av-prod">产</span>
+                      <div>
+                        <div class="friend-patch-name" id="fpFriendName">产品经理</div>
+                        <div class="friend-patch-id">friendId · pm</div>
+                      </div>
+                    </div>
+                    <div class="inset-section-title">系统提示词</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <textarea id="fpPrompt" rows="3" aria-label="系统提示词">输出短、可执行；验收用清单；不做视觉稿与具体写代码。</textarea>
+                      </div>
+                    </div>
+                    <div class="inset-section-title">工作目录</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="fpWorkspace" value="/Users/kejin/work/pm-agent" aria-label="工作目录" />
+                      </div>
+                    </div>
+                    <div class="inset-section-title">默认模型</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="fpModel" value="deepseek-chat" aria-label="默认模型" />
+                      </div>
+                    </div>
+                    <div class="propose-enable-row">
+                      <button class="toggle is-on" type="button" id="fpEnable" aria-pressed="true" title="启用"></button>
+                      <span>启用好友</span>
+                    </div>
+                  </div>
+
+                  <!-- p1.4 group -->
+                  <div class="propose-config-fields" id="groupFields" hidden>
+                    <div class="inset-section-title">群名</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="gpName" value="web智能体的开发" aria-label="群名" />
+                      </div>
+                    </div>
+                    <div class="inset-section-title">成员（MVP · 新建+加成员）</div>
+                    <div class="propose-member-list" id="gpMembers" aria-label="成员列表">
+                      <label class="propose-member is-checked"><input type="checkbox" checked data-id="pm" /> <span class="av av-xs av-prod">产</span> 产品经理</label>
+                      <label class="propose-member is-checked"><input type="checkbox" checked data-id="dev" /> <span class="av av-xs av-tech">技</span> 技术开发</label>
+                      <label class="propose-member is-checked"><input type="checkbox" checked data-id="ui" /> <span class="av av-xs av-ui">UI</span> UI设计</label>
+                      <label class="propose-member"><input type="checkbox" data-id="owner" /> <span class="av av-xs av-seal">印</span> 群主</label>
+                    </div>
+                    <p class="field-help">确认后建群并写入成员；通讯录「＋ → 发起群聊」仍保留。</p>
+                  </div>
+
+                  <!-- p1.4 vault_binding -->
+                  <div class="propose-config-fields" id="vaultBindingFields" hidden>
+                    <div class="inset-section-title">保险库条目</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row">
+                        <input type="text" id="vbLabel" value="DeepSeek API" aria-label="条目名称" />
+                      </div>
+                    </div>
+                    <div class="inset-section-title">密钥（不回显全文）</div>
+                    <div class="inset-group" style="margin-bottom:10px">
+                      <div class="inset-row propose-key-row">
+                        <span class="masked key-mask" id="vbSecretMask">••••••••••••</span>
+                        <span class="chip chip-muted">全文不回显 · 确认写入保险库</span>
+                      </div>
+                    </div>
+                    <div class="inset-section-title">绑定到</div>
+                    <div class="inset-group" style="margin-bottom:8px">
+                      <div class="inset-row">
+                        <select id="vbBindTarget" aria-label="绑定目标" style="width:100%;border:0;background:transparent;font:inherit;padding:4px 0">
+                          <option value="provider:deepseek" selected>提供方 · DeepSeek · API Key</option>
+                          <option value="mail:imap">邮箱 · IMAP 密码</option>
+                          <option value="mail:smtp">邮箱 · SMTP 密码</option>
+                        </select>
+                      </div>
+                    </div>
+                    <p class="field-help">创建条目并绑到引用位；气泡与历史禁止完整密钥。</p>
+                  </div>
+                </div>
+
+                <p class="friend-only-note" id="friendNote" hidden>创建好友无需选作用域：确认后进入通讯录；取消丢弃草稿。未确认不落库。</p>
+                <p class="friend-only-note" id="configNote" hidden>配置变更无需作用域：确认落库 / 取消不写。设置页仍保留作对照。</p>
+
+                <div class="scope-block" id="scopeBlock">
+                <div class="confirm-q">这笔设置给谁？</div>
+                <div class="scope-options" id="scopeOpts">
+                  <button type="button" class="scope-opt" data-scope="global" aria-pressed="false">
+                    <span class="radio" aria-hidden="true"></span>
+                    <span>
+                      <div class="opt-title">全局（所有好友可用）</div>
+                      <div class="opt-desc" id="optGlobalDesc">对全部好友可见</div>
+                    </span>
+                  </button>
+                  <button type="button" class="scope-opt" data-scope="friends" aria-pressed="false">
+                    <span class="radio" aria-hidden="true"></span>
+                    <span>
+                      <div class="opt-title">指定好友</div>
+                      <div class="opt-desc">仅勾选的好友可用 · 至少选 1 人</div>
+                    </span>
+                  </button>
+                </div>
+                <div class="friend-multi" id="friendMulti" aria-label="选择好友" hidden>
+                  <button type="button" class="friend-multi-item" data-id="pm"><span class="check"></span><span class="av av-xs av-prod">产</span> 产品经理</button>
+                  <button type="button" class="friend-multi-item" data-id="dev"><span class="check"></span><span class="av av-xs av-tech">技</span> 技术开发</button>
+                  <button type="button" class="friend-multi-item" data-id="ui"><span class="check"></span><span class="av av-xs av-ui">UI</span> UI设计</button>
+                  <button type="button" class="friend-multi-item" data-id="owner"><span class="check"></span><span class="av av-xs av-seal">印</span> 群主</button>
+                </div>
+                </div><!-- /scopeBlock -->
+                <p class="confirm-note" id="ccNote">模型工具 <code>workbench_propose</code> 仅 stage · status=pending 不落库 · 确认才写。p1.4 扩展 provider|app_settings|friend_patch|group|vault_binding。≠ 系统建议技能 / ≠ MCP 市场启用。</p>
+              </div>
+              <div class="confirm-card-ft" id="ccFt">
+                <button type="button" class="btn btn-secondary btn-sm" id="ccCancel">取消</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="ccSimFail" title="演示失败回滚">模拟失败</button>
+                <button type="button" class="btn btn-sm" id="ccOk" disabled>确认落库</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- (b) 已确认 / 成功（既有 kind 示意，回归） -->
+        <div class="msg" data-demo="success">
+          <div class="av av-sm av-seal">印</div>
+          <div class="msg-stack">
+            <div class="msg-who">群主 · 示意成功</div>
+            <div class="bubble">已确认落库。作用域 = 指定好友（产品经理、技术开发）。</div>
+            <div class="confirm-card is-done" role="status" aria-label="已创建">
+              <div class="confirm-card-hd">
+                <div class="cc-icon">✓</div>
+                <div>
+                  <div class="cc-kind">Skill</div>
+                  <div class="cc-title">已创建技能</div>
+                  <div class="cc-sub">验收三步清单 · 指定好友 · 可在好友「已挂技能」查看</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- (c) 失败 + 整笔回滚 -->
+        <div class="msg" data-demo="fail">
+          <div class="av av-sm av-seal">印</div>
+          <div class="msg-stack">
+            <div class="msg-who">群主 · 示意失败回滚</div>
+            <div class="bubble">confirm 失败：proposal.error 已展示；status 仍 pending，本体零写入。可重试或取消。</div>
+            <div class="confirm-card is-failed" role="group" aria-label="创建失败" data-status="pending">
+              <div class="confirm-card-hd">
+                <div class="cc-icon">!</div>
+                <div>
+                  <div class="cc-kind">MCP</div>
+                  <div class="cc-title">启用未完成</div>
+                  <div class="cc-sub">filesystem · stdio · 整笔回滚 · 仍 pending</div>
+                </div>
+              </div>
+              <div class="confirm-card-bd">
+                <p class="confirm-error">proposal.error：无法写入本地配置（磁盘或权限）。本体未写入。</p>
+                <p class="confirm-note" style="margin-top:8px">失败保持 pending 可重试 · 无半写入成功。</p>
+              </div>
+              <div class="confirm-card-ft">
+                <button type="button" class="btn btn-secondary btn-sm">取消</button>
+                <button type="button" class="btn btn-sm">重试</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- (d) 已取消 / 丢弃 -->
+        <div class="msg" data-demo="cancelled">
+          <div class="av av-sm av-seal">印</div>
+          <div class="msg-stack">
+            <div class="msg-who">群主 · 示意取消</div>
+            <div class="bubble">已取消，草稿丢弃，未落库。</div>
+            <div class="confirm-card is-cancelled" role="status" aria-label="已取消">
+              <div class="confirm-card-hd">
+                <div class="cc-icon">–</div>
+                <div>
+                  <div class="cc-kind">自动化</div>
+                  <div class="cc-title">已取消</div>
+                  <div class="cc-sub">每日站会摘要 · cancel 丢弃 pending · 无落库（亦可直接移除卡）</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="chat-ft">
+        <textarea class="composer" id="composer" placeholder="输入消息，Enter 发送；/new_chat 开新线程">配置经对话提议，确认门闩才落库</textarea>
+        <div class="ft-row">
+          <div class="ft-actions">
+            <span class="hint">p1.4 · skill|mcp|task|friend + provider|app_settings|friend_patch|group|vault_binding</span>
+          </div>
+          <button class="btn" type="button" id="btnSend">发送</button>
+        </div>
+      </footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" hidden></div>
+
+  <script>
+    (function () {
+      var LEGACY = { skill:1, mcp:1, task:1, friend:1 };
+      var CONFIG_KINDS = { provider:1, app_settings:1, friend_patch:1, group:1, vault_binding:1 };
+
+      var KINDS = {
+        skill: {
+          kind: 'skill',
+          kindLabel: 'Skill',
+          icon: '✨',
+          title: '创建技能',
+          sub: '验收三步清单 · 3 步 · 未确认不落库',
+          name: '验收三步清单',
+          summary: '1. 对照方案验收 2. 抽确认卡 3. 交包截图',
+          globalDesc: '技能对全部好友可见',
+          ask: '帮我把「验收三步」存成技能，给产品经理和技术开发用。',
+          bubble: '可以。先选作用域，再点确认才会写入；取消则丢弃草稿。',
+          successSub: '验收三步清单 · 可在好友「已挂技能」查看',
+          doneTitle: '已创建技能'
+        },
+        mcp: {
+          kind: 'mcp',
+          kindLabel: 'MCP',
+          icon: '🔌',
+          title: '启用 MCP',
+          sub: 'filesystem · stdio · 12 tools · 未确认不写入配置',
+          name: 'filesystem',
+          summary: '本地文件读写 · transport stdio · 启用时选择作用域',
+          globalDesc: 'MCP 对全部好友可用',
+          ask: '把 filesystem 这个 MCP 启上，先给技术开发用。',
+          bubble: '好。启用前请确认作用域；确认后才写本地 MCP 配置。',
+          successSub: 'filesystem · 已写入本地配置',
+          doneTitle: '已启用 MCP'
+        },
+        task: {
+          kind: 'task',
+          kindLabel: '自动化',
+          icon: '⚡',
+          title: '创建自动化任务',
+          sub: '每日站会摘要 · Cron 0 9 * * 1-5 · 未确认不落库',
+          name: '每日站会摘要',
+          summary: 'Cron 0 9 * * 1-5 · 绑定执行好友「产品经理」',
+          globalDesc: '任务定义对全部好友可见；运行仍由绑定好友执行',
+          ask: '建一个工作日早 9 点的站会摘要自动化任务。',
+          bubble: '建议新建「每日站会摘要」。请先选作用域，确认后才写入自动化任务。',
+          successSub: '每日站会摘要 · 可在「自动化任务」查看',
+          doneTitle: '已创建自动化任务'
+        },
+        friend: {
+          kind: 'friend',
+          kindLabel: '好友',
+          icon: '👤',
+          title: '创建好友',
+          sub: '小程序开发者 · 未确认不落库',
+          name: '小程序开发者',
+          summary: '',
+          persona: '专注小程序业务；输出短、可执行；不做视觉稿。',
+          defaultModel: 'deepseek-chat',
+          globalDesc: '',
+          ask: '帮我创建一个好友，名字叫做小程序开发者。',
+          bubble: '可以。请确认名字与人设；确认后才写入通讯录。取消丢弃草稿。通讯录「＋」新建好友仍可用。',
+          successSub: '小程序开发者 · 已写入通讯录',
+          doneTitle: '已创建好友'
+        },
+        provider: {
+          kind: 'provider',
+          kindLabel: '提供方',
+          icon: '🔑',
+          title: '更新提供方',
+          sub: 'DeepSeek · Key → 保险库引用 · 未确认不落库',
+          name: 'DeepSeek',
+          ask: '帮我把 DeepSeek 的 Key 配上，默认模型用 deepseek-chat。',
+          bubble: '好。我会把 Key 写入保险库再绑到提供方；卡上只显示脱敏末位。确认落库，取消不写。',
+          successSub: 'DeepSeek · 已绑保险库引用',
+          doneTitle: '已更新提供方'
+        },
+        app_settings: {
+          kind: 'app_settings',
+          kindLabel: '应用设置',
+          icon: '⚙️',
+          title: '更新应用设置',
+          sub: '发送等待 3→5 · 白名单 +1 · 未确认不落库',
+          name: '应用设置',
+          ask: '把发送等待改成 5 秒，并把 alice@corp.com 加进邮箱白名单。',
+          bubble: '可以。下面是本次 patch 的 diff 摘要；确认后写入应用设置，取消不改。',
+          successSub: 'sendWaitSeconds=5 · whitelist+1',
+          doneTitle: '已更新应用设置'
+        },
+        friend_patch: {
+          kind: 'friend_patch',
+          kindLabel: '好友补丁',
+          icon: '✏️',
+          title: '更新好友',
+          sub: '产品经理 · 系统提示词 / 工作目录 · 未确认不落库',
+          name: '产品经理',
+          ask: '把产品经理的系统提示词和工作目录改一下。',
+          bubble: '好。这是对已有好友「产品经理」的补丁；确认落库，取消不写。设置页好友编辑仍可用。',
+          successSub: '产品经理 · 资料已更新',
+          doneTitle: '已更新好友'
+        },
+        group: {
+          kind: 'group',
+          kindLabel: '群组',
+          icon: '👥',
+          title: '创建群组',
+          sub: 'web智能体的开发 · 3 名成员 · 未确认不落库',
+          name: 'web智能体的开发',
+          ask: '建一个群「web智能体的开发」，把产品、技术、UI 拉进去。',
+          bubble: '可以。确认群名与成员后才建群；取消丢弃。通讯录「＋ → 发起群聊」仍保留。',
+          successSub: 'web智能体的开发 · 已建群',
+          doneTitle: '已创建群组'
+        },
+        vault_binding: {
+          kind: 'vault_binding',
+          kindLabel: '保险库',
+          icon: '🔐',
+          title: '创建并绑定密钥',
+          sub: 'DeepSeek API → 提供方 Key 位 · 不回显全文',
+          name: 'DeepSeek API',
+          ask: '把这段 Key 存进保险库，并绑到 DeepSeek 提供方。',
+          bubble: '好。会创建保险库条目并绑到提供方 Key 引用位；卡上与历史都不显示完整密钥。确认落库，取消不写。',
+          successSub: 'DeepSeek API · 已绑定提供方',
+          doneTitle: '已绑定保险库'
+        }
+      };
+
+      var kindSegLegacy = document.getElementById('kindSegLegacy');
+      var kindSegNew = document.getElementById('kindSegNew');
+      var allSegBtns = function () {
+        return Array.prototype.slice.call(kindSegLegacy.querySelectorAll('.seg-btn'))
+          .concat(Array.prototype.slice.call(kindSegNew.querySelectorAll('.seg-btn')));
+      };
+      var card = document.getElementById('proposeCard');
+      var friendMulti = document.getElementById('friendMulti');
+      var scopeOpts = document.getElementById('scopeOpts');
+      var ccOk = document.getElementById('ccOk');
+      var ccCancel = document.getElementById('ccCancel');
+      var ccSimFail = document.getElementById('ccSimFail');
+      var toast = document.getElementById('toast');
+      var persisted = false;
+      var currentKind = 'skill';
+
+      function showToast(text) {
+        toast.hidden = false;
+        toast.textContent = text;
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(function () { toast.hidden = true; }, 2200);
+      }
+
+      function selectedScope() {
+        var el = scopeOpts.querySelector('.scope-opt.is-selected');
+        return el ? el.getAttribute('data-scope') : null;
+      }
+
+      function checkedFriendIds() {
+        return Array.prototype.map.call(
+          friendMulti.querySelectorAll('.friend-multi-item.is-checked'),
+          function (el) { return el.getAttribute('data-id'); }
+        );
+      }
+
+      function checkedGroupMembers() {
+        return Array.prototype.map.call(
+          document.querySelectorAll('#gpMembers input:checked'),
+          function (el) { return el.getAttribute('data-id'); }
+        );
+      }
+
+      function isLegacyScoped() {
+        return currentKind === 'skill' || currentKind === 'mcp' || currentKind === 'task';
+      }
+
+      function scopeValid() {
+        if (currentKind === 'friend') {
+          return (document.getElementById('fieldName').value || '').trim().length > 0;
+        }
+        if (currentKind === 'provider') {
+          return (document.getElementById('pvName').value || '').trim().length > 0;
+        }
+        if (currentKind === 'app_settings' || currentKind === 'friend_patch') {
+          return true;
+        }
+        if (currentKind === 'group') {
+          var n = (document.getElementById('gpName').value || '').trim();
+          return n.length > 0 && checkedGroupMembers().length >= 1;
+        }
+        if (currentKind === 'vault_binding') {
+          return (document.getElementById('vbLabel').value || '').trim().length > 0;
+        }
+        var s = selectedScope();
+        if (s === 'global') return true;
+        if (s === 'friends') return checkedFriendIds().length >= 1;
+        return false;
+      }
+
+      function syncConfirm() {
+        var status = card.getAttribute('data-status');
+        if (status !== 'pending') {
+          ccOk.disabled = true;
+          return;
+        }
+        ccOk.disabled = !scopeValid();
+      }
+
+      function hideAllExtra() {
+        document.getElementById('legacyFields').hidden = true;
+        document.getElementById('friendFields').hidden = true;
+        document.getElementById('providerFields').hidden = true;
+        document.getElementById('appSettingsFields').hidden = true;
+        document.getElementById('friendPatchFields').hidden = true;
+        document.getElementById('groupFields').hidden = true;
+        document.getElementById('vaultBindingFields').hidden = true;
+        document.getElementById('friendNote').hidden = true;
+        document.getElementById('configNote').hidden = true;
+        document.getElementById('scopeBlock').hidden = true;
+      }
+
+      function applyKind(kind) {
+        if (!KINDS[kind]) return;
+        currentKind = kind;
+        var k = KINDS[kind];
+        card.setAttribute('data-kind', kind);
+        document.getElementById('ccIcon').textContent = k.icon;
+        document.getElementById('ccKind').textContent = k.kindLabel;
+        document.getElementById('ccTitle').textContent = k.title;
+        document.getElementById('ccSub').textContent = k.sub;
+        document.getElementById('userAsk').textContent = k.ask;
+        document.getElementById('assistBubble').textContent = k.bubble;
+
+        hideAllExtra();
+
+        if (isLegacyScoped()) {
+          document.getElementById('legacyFields').hidden = false;
+          document.getElementById('fieldName').value = k.name;
+          document.getElementById('fieldNameLabel').textContent = '名称';
+          document.getElementById('fieldName').setAttribute('aria-label', '名称');
+          document.getElementById('fieldSummary').textContent = k.summary || '';
+          document.getElementById('fieldSummaryWrap').hidden = false;
+          document.getElementById('optGlobalDesc').textContent = k.globalDesc;
+          document.getElementById('scopeBlock').hidden = false;
+        } else if (kind === 'friend') {
+          document.getElementById('legacyFields').hidden = false;
+          document.getElementById('fieldName').value = k.name;
+          document.getElementById('fieldNameLabel').textContent = '名字';
+          document.getElementById('fieldName').setAttribute('aria-label', '名字');
+          document.getElementById('fieldSummaryWrap').hidden = true;
+          document.getElementById('friendFields').hidden = false;
+          document.getElementById('friendNote').hidden = false;
+          document.getElementById('fieldPersona').value = k.persona || '';
+          document.getElementById('fieldDefaultModel').value = k.defaultModel || '';
+        } else if (kind === 'provider') {
+          document.getElementById('providerFields').hidden = false;
+          document.getElementById('configNote').hidden = false;
+        } else if (kind === 'app_settings') {
+          document.getElementById('appSettingsFields').hidden = false;
+          document.getElementById('configNote').hidden = false;
+        } else if (kind === 'friend_patch') {
+          document.getElementById('friendPatchFields').hidden = false;
+          document.getElementById('configNote').hidden = false;
+        } else if (kind === 'group') {
+          document.getElementById('groupFields').hidden = false;
+          document.getElementById('configNote').hidden = false;
+        } else if (kind === 'vault_binding') {
+          document.getElementById('vaultBindingFields').hidden = false;
+          document.getElementById('configNote').hidden = false;
+        }
+
+        resetDraftUI(false);
+        setSegActive(kind);
+        // MVP: one pending card; static success/fail/cancel demos only with ?states=1
+        var showStates = /(?:\?|&)states=1(?:&|$)/.test(location.search);
+        document.querySelectorAll('[data-demo]').forEach(function (el) {
+          el.hidden = !showStates;
+        });
+      }
+
+      function setSegActive(kind) {
+        allSegBtns().forEach(function (b) {
+          var on = b.getAttribute('data-kind') === kind;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+      }
+
+      function resetDraftUI(keepScope) {
+        card.setAttribute('data-status', 'pending');
+        card.classList.remove('is-done', 'is-failed', 'is-cancelled');
+        card.removeAttribute('data-error');
+        document.getElementById('ccBody').hidden = false;
+        document.getElementById('ccFt').hidden = false;
+        document.getElementById('ccNote').innerHTML =
+          '模型 <code>workbench_propose</code> 仅 stage · pending 不落库 · 确认才写入。p1.4：provider|app_settings|friend_patch|group|vault_binding；既有 skill|mcp|task|friend 回归。≠ suggest-skill / ≠ 市场启用。';
+        ccCancel.textContent = '取消';
+        ccOk.textContent = '确认落库';
+        ccSimFail.hidden = false;
+        if (!keepScope) {
+          scopeOpts.querySelectorAll('.scope-opt').forEach(function (o) {
+            o.classList.remove('is-selected');
+            o.setAttribute('aria-pressed', 'false');
+          });
+          friendMulti.classList.remove('is-open');
+          friendMulti.hidden = true;
+          friendMulti.querySelectorAll('.friend-multi-item').forEach(function (i) {
+            i.classList.remove('is-checked');
+          });
+        }
+        var k = KINDS[currentKind];
+        document.getElementById('ccIcon').textContent = k.icon;
+        document.getElementById('ccTitle').textContent = k.title;
+        document.getElementById('ccSub').textContent = k.sub;
+        persisted = false;
+        syncConfirm();
+      }
+
+      function currentDisplayName() {
+        var k = KINDS[currentKind];
+        if (isLegacyScoped() || currentKind === 'friend') {
+          return (document.getElementById('fieldName').value || k.name).trim();
+        }
+        if (currentKind === 'provider') return (document.getElementById('pvName').value || k.name).trim();
+        if (currentKind === 'group') return (document.getElementById('gpName').value || k.name).trim();
+        if (currentKind === 'vault_binding') return (document.getElementById('vbLabel').value || k.name).trim();
+        if (currentKind === 'friend_patch') return document.getElementById('fpFriendName').textContent;
+        return k.name;
+      }
+
+      function renderSuccess() {
+        var k = KINDS[currentKind];
+        var scope = selectedScope();
+        var scopeLabel = '';
+        if (isLegacyScoped()) {
+          scopeLabel = scope === 'global'
+            ? '全局'
+            : ('指定好友 · ' + checkedFriendIds().map(function (id) {
+                var map = { pm: '产品经理', dev: '技术开发', ui: 'UI设计', owner: '群主' };
+                return map[id] || id;
+              }).join('、'));
+        }
+        card.setAttribute('data-status', 'confirmed');
+        card.removeAttribute('data-error');
+        card.classList.remove('is-failed', 'is-cancelled');
+        card.classList.add('is-done');
+        document.getElementById('ccIcon').textContent = '✓';
+        document.getElementById('ccTitle').textContent = k.doneTitle || ('已' + k.title);
+        var nameNow = currentDisplayName();
+        var sub;
+        if (currentKind === 'friend') sub = nameNow + ' · 已写入通讯录';
+        else if (isLegacyScoped()) sub = k.successSub + ' · ' + scopeLabel;
+        else if (currentKind === 'group') sub = nameNow + ' · ' + checkedGroupMembers().length + ' 名成员 · 已建群';
+        else if (currentKind === 'provider') sub = nameNow + ' · Key 已走保险库引用（sk-••••9f3a）';
+        else if (currentKind === 'vault_binding') sub = nameNow + ' · 已绑定 · 无明文回显';
+        else sub = k.successSub;
+        document.getElementById('ccSub').textContent = sub;
+        document.getElementById('ccBody').hidden = true;
+        document.getElementById('ccFt').hidden = true;
+        persisted = true;
+        showToast('已确认落库 · ' + (scopeLabel || nameNow));
+      }
+
+      function renderFailed() {
+        var k = KINDS[currentKind];
+        card.setAttribute('data-status', 'pending');
+        card.setAttribute('data-error', '无法写入本地配置（磁盘或权限）');
+        card.classList.remove('is-done', 'is-cancelled');
+        card.classList.add('is-failed');
+        document.getElementById('ccIcon').textContent = '!';
+        document.getElementById('ccTitle').textContent = k.kind === 'mcp' ? '启用未完成' : '写入未完成';
+        document.getElementById('ccSub').textContent = (k.name || '') + ' · 整笔已回滚 · 仍为 pending 可重试';
+        document.getElementById('ccBody').hidden = false;
+        document.getElementById('ccNote').innerHTML =
+          '<span class="confirm-error" style="display:block;margin-bottom:6px">proposal.error：无法写入本地配置（磁盘或权限）。本体未写入。</span>失败保持 pending · 可重试或取消丢弃。';
+        ccOk.textContent = '重试';
+        ccCancel.textContent = '取消';
+        ccSimFail.hidden = true;
+        persisted = false;
+        syncConfirm();
+        showToast('写入失败 · 已整笔回滚 · 仍可重试');
+      }
+
+      function renderCancelled() {
+        var k = KINDS[currentKind];
+        card.setAttribute('data-status', 'cancelled');
+        card.classList.remove('is-done', 'is-failed');
+        card.classList.add('is-cancelled');
+        document.getElementById('ccIcon').textContent = '–';
+        document.getElementById('ccTitle').textContent = '已取消';
+        document.getElementById('ccSub').textContent = currentDisplayName() + ' · 草稿已丢弃 · 无落库';
+        document.getElementById('ccBody').hidden = true;
+        document.getElementById('ccFt').hidden = true;
+        persisted = false;
+        showToast('已取消 · 草稿丢弃 · 未落库');
+      }
+
+      function onSegClick(btn) {
+        applyKind(btn.getAttribute('data-kind'));
+      }
+
+      allSegBtns().forEach(function (btn) {
+        btn.addEventListener('click', function () { onSegClick(btn); });
+      });
+
+      scopeOpts.querySelectorAll('.scope-opt').forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          if (card.getAttribute('data-status') !== 'pending') return;
+          scopeOpts.querySelectorAll('.scope-opt').forEach(function (o) {
+            o.classList.remove('is-selected');
+            o.setAttribute('aria-pressed', 'false');
+          });
+          opt.classList.add('is-selected');
+          opt.setAttribute('aria-pressed', 'true');
+          var friends = opt.getAttribute('data-scope') === 'friends';
+          friendMulti.classList.toggle('is-open', friends);
+          friendMulti.hidden = !friends;
+          syncConfirm();
+        });
+      });
+
+      friendMulti.querySelectorAll('.friend-multi-item').forEach(function (item) {
+        item.addEventListener('click', function () {
+          if (card.getAttribute('data-status') !== 'pending') return;
+          item.classList.toggle('is-checked');
+          syncConfirm();
+        });
+      });
+
+      document.querySelectorAll('#pvEnable, #fpEnable').forEach(function (t) {
+        t.addEventListener('click', function () {
+          if (card.getAttribute('data-status') !== 'pending') return;
+          t.classList.toggle('is-on');
+          t.setAttribute('aria-pressed', t.classList.contains('is-on') ? 'true' : 'false');
+        });
+      });
+
+      document.querySelectorAll('#gpMembers input').forEach(function (cb) {
+        cb.addEventListener('change', function () {
+          cb.closest('.propose-member').classList.toggle('is-checked', cb.checked);
+          syncConfirm();
+        });
+      });
+
+      ccCancel.addEventListener('click', function () {
+        renderCancelled();
+      });
+
+      ccOk.addEventListener('click', function () {
+        if (!scopeValid()) return;
+        var hasError = card.classList.contains('is-failed');
+        if (hasError) {
+          card.classList.remove('is-failed');
+          card.setAttribute('data-status', 'pending');
+          var k = KINDS[currentKind];
+          document.getElementById('ccIcon').textContent = k.icon;
+          document.getElementById('ccTitle').textContent = k.title;
+          document.getElementById('ccSub').textContent = k.sub;
+          document.getElementById('ccNote').textContent = '重试中… 确认后整笔落库。';
+          ccOk.textContent = '确认落库';
+          ccSimFail.hidden = false;
+          syncConfirm();
+          setTimeout(function () {
+            if (card.getAttribute('data-status') === 'pending' && scopeValid()) renderSuccess();
+          }, 280);
+          return;
+        }
+        renderSuccess();
+      });
+
+      ccSimFail.addEventListener('click', function () {
+        if (!scopeValid()) {
+          showToast(isLegacyScoped() ? '请先选有效作用域，再模拟失败' : '请先补齐必填项，再模拟失败');
+          return;
+        }
+        renderFailed();
+      });
+
+      document.getElementById('fieldName').addEventListener('input', syncConfirm);
+      document.getElementById('pvName').addEventListener('input', syncConfirm);
+      document.getElementById('gpName').addEventListener('input', syncConfirm);
+      document.getElementById('vbLabel').addEventListener('input', syncConfirm);
+
+      (function prefillForShot() {
+        var m = /(?:\?|&)kind=([a-z_]+)/.exec(location.search);
+        var want = m ? m[1] : null;
+        if (want && KINDS[want]) {
+          applyKind(want);
+        }
+        if (isLegacyScoped()) {
+          var friendsOpt = scopeOpts.querySelector('[data-scope="friends"]');
+          friendsOpt.classList.add('is-selected');
+          friendsOpt.setAttribute('aria-pressed', 'true');
+          friendMulti.classList.add('is-open');
+          friendMulti.hidden = false;
+          friendMulti.querySelector('[data-id="pm"]').classList.add('is-checked');
+          friendMulti.querySelector('[data-id="dev"]').classList.add('is-checked');
+        }
+        syncConfirm();
+        // Compact chrome for screenshots so full ConfirmCard (Key/vault/enable) fits
+        if (/(?:\?|&)shot=1(?:&|$)/.test(location.search) || want) {
+          document.body.classList.add('propose-shot');
+          var cardEl = document.getElementById('proposeCard');
+          if (cardEl) cardEl.scrollIntoView({ block: 'start' });
+        }
+      })();
+
+      window.__proposeCreate = {
+        persisted: function () { return persisted; },
+        scopeValid: scopeValid,
+        status: function () { return card.getAttribute('data-status'); },
+        kind: function () { return currentKind; },
+        proposal: function () {
+          var scope = selectedScope();
+          var kind = card.getAttribute('data-kind');
+          var base = {
+            id: card.getAttribute('data-proposal-id'),
+            kind: kind,
+            status: card.getAttribute('data-status'),
+            error: card.getAttribute('data-error') || null,
+            name: currentDisplayName()
+          };
+          if (kind === 'friend') {
+            base.persona = document.getElementById('fieldPersona').value;
+            base.defaultModelId = document.getElementById('fieldDefaultModel').value || null;
+            base.scope = null;
+            base.friendIds = [];
+            return base;
+          }
+          if (kind === 'provider') {
+            base.baseUrl = document.getElementById('pvBase').value;
+            base.defaultModelId = document.getElementById('pvModel').value;
+            base.enabled = document.getElementById('pvEnable').classList.contains('is-on');
+            base.apiKeyMasked = document.getElementById('pvKeyMask').textContent;
+            base.vaultRefLabel = 'DeepSeek API';
+            base.apiKeyPlaintext = null; // never expose
+            return base;
+          }
+          if (kind === 'app_settings') {
+            base.patch = {
+              sendWaitSeconds: 5,
+              mailInstructions: { whitelistAdd: ['alice@corp.com'] }
+            };
+            return base;
+          }
+          if (kind === 'friend_patch') {
+            base.friendId = 'pm';
+            base.friendName = document.getElementById('fpFriendName').textContent;
+            base.systemPrompt = document.getElementById('fpPrompt').value;
+            base.workspacePath = document.getElementById('fpWorkspace').value;
+            base.defaultModelId = document.getElementById('fpModel').value;
+            base.enabled = document.getElementById('fpEnable').classList.contains('is-on');
+            return base;
+          }
+          if (kind === 'group') {
+            base.memberIds = checkedGroupMembers();
+            return base;
+          }
+          if (kind === 'vault_binding') {
+            base.label = document.getElementById('vbLabel').value;
+            base.bindTarget = document.getElementById('vbBindTarget').value;
+            base.secretMasked = '••••••••••••';
+            base.secretPlaintext = null;
+            return base;
+          }
+          base.scope = scope === 'global' ? 'global' : (scope === 'friends' ? 'friends' : null);
+          base.friendIds = scope === 'friends' ? checkedFriendIds() : [];
+          return base;
+        }
+      };
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+---
+description: TypeScript / React 代码规范（导入、命名、错误处理、禁令）
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# 代码规范
+
+对齐 `tsconfig.json`：`strict`、`verbatimModuleSyntax`、`noUnusedLocals`。
+
+## 导入
+
+- 仅类型用 `import type { ... }`。
+- 本地模块路径必须带 `.ts` / `.tsx` 后缀。
+- 优先相对路径；按「类型 → 同层 → 跨层」分组即可，勿为排序大改无关 import。
+
+```ts
+// ✅
+import type { Friend } from '../domain/types.ts'
+import { AppError } from './errors.ts'
+import { log } from '../logger.ts'
+
+// ❌ 缺后缀；类型当值导入
+import { Friend } from '../domain/types'
+```
+
+## 命名与形态
+
+- 文件：`kebab-case.ts` / `.tsx`（如 `mail-transport.ts`）。
+- 类型 / 组件：`PascalCase`；函数与变量：`camelCase`。
+- 工厂与服务：`createX` / `createXxxService`；repos 经 `createRepos`。
+- 路由保持薄：业务进 `src/app/`，勿在 `http/routes.ts` 堆长逻辑。
+- 可预期业务错误：`throw new AppError(status, message)`；勿空 `catch`。
+
+## UI（`src/ui/`）
+
+- 只用函数组件；样式延续现有 Apple HIG（系统蓝 `#007AFF`、气泡灰 `#E9E9EB` 等）。
+- 不引入新 UI 组件库；页面只通过 `api.ts` / `requestJson` 调后端。
+
+## 禁止
+
+- 静默吞错、或把失败当成「成功拉取 0」。
+- 日志 / 响应里出现明文 API Key、密码、Bearer。
+- 把密钥写进 Provider 或 `agent_workbench.json` 明文字段。
+- 浏览器直连需要密钥的上游（探测与对话走 Node）。
+- 为「顺便统一风格」改动无关文件。

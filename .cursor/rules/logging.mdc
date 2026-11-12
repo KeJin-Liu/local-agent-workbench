@@ -1,0 +1,65 @@
+---
+description: 日志规范（log API、级别、module、脱敏、关联字段）
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# 日志规范
+
+统一使用 `src/logger.ts` 的 `log()`，输出单行 JSON 到控制台；勿另起日志库，勿直接 `console.log` 打业务事件（临时调试除外，合并前删掉）。
+
+## 调用约定
+
+```ts
+import { log } from '../logger.ts'
+
+log('info', 'session', '发送已排队', { conversationId, runId })
+log('warn', 'llm', '模型请求失败', {
+  url,
+  error: error instanceof Error ? error.message : String(error),
+})
+```
+
+- `message`：简体中文短句，说清发生了什么（如「生成完成」「IMAP 拉信失败」）。
+- `fields`：结构化附加信息；值为 `undefined` 的键会被跳过。
+- 错误对象不要整份塞进 fields：用 `error.message`（或 `String(error)`）。
+
+## 级别
+
+| level | 何时用 |
+|-------|--------|
+| `debug` | 仅高噪声排障；默认路径少用 |
+| `info` | 正常生命周期：启动、排队、完成、确认落库 |
+| `warn` | 可恢复失败、降级、跳过（如工具准备失败仍继续） |
+| `error` | 未处理异常、启动失败、关键写失败需关注 |
+
+可预期的 `AppError` 走 HTTP 响应即可，不必每条都打 `error`；未捕获 / 意外失败才 `error`。
+
+## module 名
+
+用短小稳定的模块标签，沿用现有习惯，例如：
+
+`http` · `ui` · `app` · `session` · `llm` · `mcp` · `storage` · `vault` · `tasks` · `mail` · `memory` · `ltm` · `plan` · `assignments` · `proposals` · `code` · `workspace` · `skill-extract` · `skill-suggest`
+
+新建能力时选一个清晰的 kebab/短名，同域内保持一致，勿同一功能混用多个 module。
+
+## 关联字段
+
+会话与发送链路尽量带上便于过滤的字段：
+
+- `conversationId`、`runId`（发送 / 编排）
+- 资源 id：`id`、`task.id`、`proposal.id` 等
+- 外部调用：`baseUrl`、`url`、`count`（勿带请求体全文或密钥）
+
+## 脱敏与禁止
+
+- 密钥类字段名（`apiKey`、`password`、`token`、`secret`、`authorization`、`credential`）会被打成 `[redacted]`；**仍不要主动传入明文**。
+- 禁止记录：粘贴的 API Key、SMTP/IMAP 密码、`vault` 明文、完整 Authorization、聊天里的密钥原文。
+- `vault` 查看明文只记元数据（如 `{ id }`），不记内容。
+- 邮件日志可记 `from` / `mailId`；勿把整封正文或密码当 fields。
+
+## 何时打
+
+- 关键状态变化、外部 IO 成败、用户确认/取消、定时命中、降级路径：要打。
+- 热路径上的逐 token / 逐行循环：不要打。
+- 失败不能静默：至少 `warn`/`error` 一条人话原因（尤其邮件拉取、模型调用）。

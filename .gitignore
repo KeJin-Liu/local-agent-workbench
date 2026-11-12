@@ -1,0 +1,31 @@
+# dependencies and build
+node_modules/
+dist/
+.pnpm-store/
+
+# local runtime: chats, vault key, avatars, attachments — never publish
+data/
+
+# Playwright browser binaries downloaded for local checks
+.audit/
+
+# secrets and local env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# logs and OS junk
+*.log
+.DS_Store
+Thumbs.db
+
+# tooling output
+coverage/
+*.tsbuildinfo
+playwright-report/
+test-results/
+
+# this repo uses pnpm; do not commit an npm lockfile
+package-lock.json

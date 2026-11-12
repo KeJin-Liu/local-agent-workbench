@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>本地智能体工作台 · 邮箱工作指令 / 计划提示词（p1.3.1 / p1.4.1）</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <nav class="rail" aria-label="主导航">
+      <div class="rail-avatar" title="我">我</div>
+      <a class="rail-item" href="index.html" title="会话"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3.75A2.75 2.75 0 0 0 1.25 6.5v8A2.75 2.75 0 0 0 4 17.25h1.75V20.5a.75.75 0 0 0 1.22.58L11.3 17.25H20A2.75 2.75 0 0 0 22.75 14.5v-8A2.75 2.75 0 0 0 20 3.75H4zm3.25 6a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm4.75 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zm4.75 0a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5z"/></svg></a>
+      <a class="rail-item" href="mcp.html" title="MCP"><svg class="rail-svg rail-svg-mcp" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-35 12 12)" fill="none" stroke="#A8AEB8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="4.5" width="8" height="4" rx="1.2" fill="#C5CAD3" stroke="#9AA1AC"/><path d="M9.2 8.5h5.6v5.2a2.8 2.8 0 0 1-2.8 2.8h0a2.8 2.8 0 0 1-2.8-2.8V8.5z" fill="#B0B6C0" stroke="#8E959F"/><path d="M10.3 16.5v3M13.7 16.5v3"/><path d="M7.2 10.2H5.5M18.5 10.2h-1.7"/></g></svg></a>
+      <a class="rail-item" href="vault.html" title="密码库"><svg class="rail-svg rail-svg-key" viewBox="0 0 24 24" aria-hidden="true"><path fill="#E8B84A" d="M14.5 3.5a5 5 0 0 0-4.74 6.6L3.2 16.66a1.2 1.2 0 0 0-.02 1.7l1.46 1.46a1.2 1.2 0 0 0 1.7 0l.7-.7.9.9a1 1 0 0 0 1.42 0l.9-.9.7.7a1 1 0 0 0 1.42 0l1.2-1.2a1.2 1.2 0 0 0 0-1.7l-3.3-3.3A5 5 0 0 0 14.5 3.5zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6z"/></svg></a>
+      <a class="rail-item" href="tasks.html" title="自动化任务"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3.75A.75.75 0 0 1 7.75 3h.5a.75.75 0 0 1 .75.75V5h6.5V3.75a.75.75 0 0 1 .75-.75h.5a.75.75 0 0 1 .75.75V5h1.5A2.75 2.75 0 0 1 21.5 7.75v11A2.75 2.75 0 0 1 18.75 21.5H5.25A2.75 2.75 0 0 1 2.5 18.75v-11A2.75 2.75 0 0 1 5.25 5H6.75V3.75zM4.5 9.5v9.25c0 .69.56 1.25 1.25 1.25h13.5c.69 0 1.25-.56 1.25-1.25V9.5H4.5zm3.25 3.25h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1 0-1.5zm0 3.5h6.5a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5z"/></svg></a>
+      <div class="rail-spacer"></div>
+      <a class="rail-item is-active" href="settings.html" title="设置"><svg class="rail-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.07 7.07 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.23-1.12.54-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.43.34.68.22l2.39-.96c.5.4 1.05.72 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.58-.22 1.12-.54 1.63-.94l2.39.96c.25.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg></a>
+    </nav>
+
+    <div class="page">
+      <header class="page-hd">
+        <div>
+          <div class="page-title">邮箱 / 工作指令</div>
+          <div class="page-sub">应用侧 IMAP 拉信 · SMTP 回结果 · 写入绑定好友会话 · 白名单 · 计划模式提示词</div>
+        </div>
+        <div class="grow"></div>
+        <a class="btn btn-secondary" href="settings.html">返回设置</a>
+        <a class="btn btn-ghost" href="tasks.html">看定时任务</a>
+      </header>
+
+      <div class="page-bd">
+        <div class="page-layout-wide mail-settings" style="display:flex;flex-direction:column;gap:18px;max-width:760px">
+
+          <div class="mail-note" role="note">
+            <strong>应用侧拉信</strong>：本机服务用 IMAP <strong>自己拉信</strong>、白名单过滤后，把正文写入<strong>绑定好友会话</strong>并触发对话；跑完后 SMTP 回<strong>结果摘要</strong>（不贴逐步 tool 日志）。<strong>模型不连邮箱</strong>。启用后默认挂系统任务「每 10 分钟拉取工作指令邮件」（绑定群主，可在 <a href="tasks.html?task=mail">自动化任务</a> 改）。白名单 From <strong>精确匹配、大小写不敏感</strong>。
+          </div>
+
+          <!-- 启用 -->
+          <div>
+            <div class="inset-section-title">通道</div>
+            <div class="inset-group">
+              <div class="inset-row">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13px;font-weight:500">启用邮箱工作指令</div>
+                  <div class="help">关闭则不拉信、不回信；群主聊天照常</div>
+                </div>
+                <button class="toggle is-on" id="mailEnable" type="button" aria-pressed="true" title="启用"></button>
+              </div>
+              <div class="inset-row">
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13px;font-weight:500">轮询间隔</div>
+                  <div class="help">群主默认定时拉信；本包默认 10 分钟</div>
+                </div>
+                <div class="stepper" id="pollStepper" role="group" aria-label="轮询间隔（分钟）">
+                  <button type="button" class="stepper-btn" data-step="-1" aria-label="减少">−</button>
+                  <span class="stepper-value" id="pollValue">10 分钟</span>
+                  <button type="button" class="stepper-btn" data-step="1" aria-label="增加">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- IMAP -->
+          <div>
+            <div class="inset-section-title">IMAP · 收信（拉工作指令）</div>
+            <div class="inset-group mail-fields">
+              <div class="inset-row">
+                <label class="inset-label" for="imapHost">主机</label>
+                <input id="imapHost" type="text" value="imap.163.com" autocomplete="off" />
+              </div>
+              <div class="inset-row">
+                <label class="inset-label" for="imapPort">端口</label>
+                <input id="imapPort" type="number" value="993" style="max-width:100px" />
+                <label class="mail-tls"><input type="checkbox" checked /> TLS</label>
+              </div>
+              <div class="inset-row">
+                <label class="inset-label" for="imapUser">账号</label>
+                <input id="imapUser" type="email" value="owner@example.com" autocomplete="username" />
+              </div>
+              <div class="inset-row">
+                <label class="inset-label">密码 / 密钥</label>
+                <div class="vault-ref">
+                  <input class="masked" type="password" value="••••••••••••" disabled placeholder="密码库引用" />
+                  <a class="btn btn-secondary btn-sm" href="vault.html">从密码库选</a>
+                </div>
+              </div>
+              <div class="mail-field-help">密钥走密码库引用，此处不存明文（对齐 Provider）。</div>
+            </div>
+          </div>
+
+          <!-- SMTP -->
+          <div>
+            <div class="inset-section-title">SMTP · 发信（回结果）</div>
+            <div class="inset-group mail-fields">
+              <div class="inset-row">
+                <label class="inset-label" for="smtpHost">主机</label>
+                <input id="smtpHost" type="text" value="smtp.163.com" autocomplete="off" />
+              </div>
+              <div class="inset-row">
+                <label class="inset-label" for="smtpPort">端口</label>
+                <input id="smtpPort" type="number" value="465" style="max-width:100px" />
+                <label class="mail-tls"><input type="checkbox" checked /> TLS</label>
+              </div>
+              <div class="inset-row">
+                <label class="inset-label" for="smtpUser">账号</label>
+                <input id="smtpUser" type="email" value="owner@example.com" autocomplete="username" />
+              </div>
+              <div class="inset-row">
+                <label class="inset-label">密码 / 密钥</label>
+                <div class="vault-ref">
+                  <input class="masked" type="password" value="••••••••••••" disabled placeholder="密码库引用" />
+                  <a class="btn btn-secondary btn-sm" href="vault.html">从密码库选</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Whitelist -->
+          <div>
+            <div class="inset-section-title">工作指令发件人白名单</div>
+            <div class="inset-group">
+              <div class="inset-row" style="flex-direction:column;align-items:stretch;gap:10px">
+                <div class="help" style="margin:0">仅这些 From 才执行（精确匹配 · 大小写不敏感）。例：收件箱三封里只跑 <code>owner@example.com</code>。</div>
+                <div class="whitelist-chips" id="whitelist" aria-label="白名单">
+                  <span class="wl-chip">owner@example.com <button type="button" class="wl-x" aria-label="移除">✕</button></span>
+                </div>
+                <div class="wl-add-row">
+                  <input type="email" id="wlInput" placeholder="添加发件人邮箱" aria-label="添加白名单邮箱" />
+                  <button type="button" class="btn btn-secondary btn-sm" id="wlAdd">添加</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Plan prompt (p1.2 追加) -->
+          <div id="planPromptSection">
+            <div class="inset-section-title">计划模式 · 通用提示词</div>
+            <div class="inset-group plan-prompt-block">
+              <p class="help" style="margin:0 0 8px;padding:0 2px">全局生效；仅在「计划模式」注入。改后对新开计划回合立即生效。有默认模板，可恢复。</p>
+              <textarea id="planPrompt" class="plan-prompt-ta" rows="16" spellcheck="false" aria-label="计划模式通用提示词"></textarea>
+              <div class="plan-prompt-ft">
+                <button type="button" class="btn btn-secondary btn-sm" id="planPromptReset">恢复默认</button>
+                <span class="hint" id="planPromptHint">未改动 · 默认模板</span>
+                <div class="grow"></div>
+                <button type="button" class="btn btn-sm" id="planPromptSave">保存</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mail-actions">
+            <button type="button" class="btn btn-secondary" id="btnTestMail">测试连接</button>
+            <button type="button" class="btn" id="btnSaveMail">保存设置</button>
+          </div>
+          <p class="field-help" style="margin-top:-6px">用当前表单与保险库引用<strong>真连</strong>；失败原因会进<strong>任务历史</strong>，不会静默「拉取 0」。未启用或凭证缺失时，任务页 / 结果邮件给人话提示。重复邮件不二次执行。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-toast" id="pageToast" role="status" aria-live="polite" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:40"></div>
+
+  <script>
+  (function () {
+    var defaultText = '你处于「计划模式」。先写计划文档，不要执行副作用步骤。\n计划必须是 Markdown，并包含以下章节：\n1. 目标与范围（In / Out）\n2. 验收标准（可勾选、可验证）\n3. 业务流程（从触发到完成）\n4. 执行步骤（有序；每步有预期结果）\n5. 相关字段 / 接口 / 数据（表、路径、API，列入明细）\n6. 风险与依赖\n7. 回滚或失败处理\n写完后等待用户确认再执行。执行时每完成一步，更新同一 MD：把该步骤标记为 [x]，并简短记录结果；未做保持 [ ]。\n计划文件路径：/tmp/agent-workbench/plans/...\n\n不明确处允许先向用户确认，再写死计划或继续执行：\n- 可用聊天气泡提出问题，等用户自由输入；\n- 或枚举选项（1. … 2. …），请用户回复序号；\n- 未确认前不要臆造关键业务字段/接口/范围。';
+
+    var toast = document.getElementById('pageToast');
+    function showToast(t) {
+      toast.textContent = t;
+      toast.classList.add('is-show');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(function () { toast.classList.remove('is-show'); toast.textContent = ''; }, 2200);
+    }
+
+    document.querySelectorAll('.toggle').forEach(function (t) {
+      t.addEventListener('click', function () {
+        t.classList.toggle('is-on');
+        t.setAttribute('aria-pressed', t.classList.contains('is-on') ? 'true' : 'false');
+      });
+    });
+
+    (function () {
+      var min = 5, max = 60, val = 10, step = 5;
+      var label = document.getElementById('pollValue');
+      var root = document.getElementById('pollStepper');
+      function render() {
+        label.textContent = val + ' 分钟';
+        root.querySelector('[data-step="-1"]').disabled = val <= min;
+        root.querySelector('[data-step="1"]').disabled = val >= max;
+      }
+      root.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-step]');
+        if (!btn || btn.disabled) return;
+        val = Math.min(max, Math.max(min, val + Number(btn.getAttribute('data-step')) * step));
+        render();
+      });
+      render();
+    })();
+
+    var wl = document.getElementById('whitelist');
+    document.getElementById('wlAdd').addEventListener('click', function () {
+      var input = document.getElementById('wlInput');
+      var v = (input.value || '').trim().toLowerCase();
+      if (!v || v.indexOf('@') < 0) { showToast('请输入有效邮箱'); return; }
+      var exists = false;
+      wl.querySelectorAll('.wl-chip').forEach(function (c) {
+        if (c.childNodes[0].textContent.trim().toLowerCase() === v) exists = true;
+      });
+      if (exists) { showToast('已在白名单'); return; }
+      var chip = document.createElement('span');
+      chip.className = 'wl-chip';
+      chip.appendChild(document.createTextNode(v + ' '));
+      var bx = document.createElement('button');
+      bx.type = 'button';
+      bx.className = 'wl-x';
+      bx.setAttribute('aria-label', '移除');
+      bx.textContent = '✕';
+      chip.appendChild(bx);
+      wl.appendChild(chip);
+      input.value = '';
+      showToast('已添加白名单');
+    });
+    wl.addEventListener('click', function (e) {
+      var x = e.target.closest('.wl-x');
+      if (!x) return;
+      x.parentElement.remove();
+      showToast('已移除');
+    });
+
+    var ta = document.getElementById('planPrompt');
+    var hint = document.getElementById('planPromptHint');
+    ta.value = defaultText;
+    function syncHint() {
+      hint.textContent = ta.value === defaultText ? '未改动 · 默认模板' : '已修改 · 保存后全局生效于计划模式';
+    }
+    ta.addEventListener('input', syncHint);
+    document.getElementById('planPromptReset').addEventListener('click', function () {
+      ta.value = defaultText;
+      syncHint();
+      showToast('已恢复默认提示词');
+    });
+    document.getElementById('planPromptSave').addEventListener('click', function () {
+      syncHint();
+      showToast('已保存 · 全局 · 仅计划模式注入');
+    });
+
+    document.getElementById('btnSaveMail').addEventListener('click', function () {
+      showToast('邮箱工作指令已保存');
+    });
+    function mailTestFailMessage() {
+      var host = (document.getElementById('imapHost').value || '').trim() || 'imap.example.com';
+      var port = (document.getElementById('imapPort').value || '').trim() || '993';
+      return 'IMAP 连不上 ' + host + ':' + port + '（凭证或 TLS）· 原因已记入任务历史';
+    }
+    function runMailTest(forceFail) {
+      var params = new URLSearchParams(location.search);
+      var fail = forceFail || params.get('test') === 'fail';
+      // 字段保持不动；仅 toast 人话结果（对齐 p1.4.1 真连）
+      if (fail) {
+        showToast(mailTestFailMessage());
+      } else {
+        showToast('IMAP/SMTP 连接正常');
+      }
+    }
+    document.getElementById('btnTestMail').addEventListener('click', function () {
+      runMailTest(false);
+    });
+    if (new URLSearchParams(location.search).get('test') === 'fail') {
+      // 打开失败态演示时自动展示一次，不改表单
+      setTimeout(function () { runMailTest(true); }, 120);
+    }
+
+    if (location.hash === '#plan-prompt') {
+      document.getElementById('planPromptSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  })();
+  </script>
+</body>
+</html>
